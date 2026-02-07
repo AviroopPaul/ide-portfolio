@@ -14,7 +14,7 @@ const Contact = () => {
       animate={{ opacity: 1 }}
       className="max-w-2xl"
     >
-      <h2 className="text-2xl font-bold mb-6 text-red">contact.sh</h2>
+      <h2 className="text-xl md:text-2xl font-bold mb-6 text-red">contact.sh</h2>
       
       <div className="bg-bg border border-border p-4 rounded font-mono text-sm mb-8">
         <div className="text-muted">#!/bin/bash</div>

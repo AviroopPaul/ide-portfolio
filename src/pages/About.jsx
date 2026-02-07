@@ -24,7 +24,7 @@ const About = () => {
          animate={{ opacity: 1 }}
          className="space-y-10"
        >
-         <h2 className="text-2xl font-bold mb-6 text-purple">about_me.md</h2>
+         <h2 className="text-xl md:text-2xl font-bold mb-6 text-purple">about_me.md</h2>
          
          <div className="bg-card p-6 rounded border border-border">
              <p className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-muted">
@@ -34,7 +34,7 @@ const About = () => {
 
          {experience.length > 0 && (
            <>
-             <h3 className="text-xl font-bold mb-4 text-yellow">Experience</h3>
+             <h3 className="text-lg md:text-xl font-bold mb-4 text-yellow">Experience</h3>
              <div className="space-y-6">
                {experience.map((job, i) => (
                  <div key={i} className="bg-card p-5 rounded border border-border">
@@ -56,7 +56,7 @@ const About = () => {
 
          {education.length > 0 && (
            <>
-             <h3 className="text-xl font-bold mb-4 text-yellow">Education</h3>
+             <h3 className="text-lg md:text-xl font-bold mb-4 text-yellow">Education</h3>
              <div className="space-y-4">
                {education.map((ed, i) => (
                  <div key={i} className="bg-card p-4 rounded border border-border">
@@ -69,7 +69,7 @@ const About = () => {
            </>
          )}
 
-         <h3 className="text-xl font-bold mb-4 text-yellow">Technical Skills</h3>
+         <h3 className="text-lg md:text-xl font-bold mb-4 text-yellow">Technical Skills</h3>
          
          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
              {Object.entries(skillsByCategory).map(([category, skills]) => (

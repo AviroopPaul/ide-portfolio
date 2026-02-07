@@ -9,19 +9,21 @@ import { AnimatePresence, motion } from 'framer-motion';
 import AIChatPanel from './AIChatPanel';
 import CommandPalette from './CommandPalette';
 import DesktopView from '../pages/DesktopView';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 const Layout = ({ children }) => {
   const { pathname } = useLocation();
   const { isAdmin, theme, toggleTheme, data } = usePortfolio();
+  const isMobile = useIsMobile();
   const [isCmdOpen, setIsCmdOpen] = useState(false);
   const [isChatPanelOpen, setIsChatPanelOpen] = useState(false);
   const [isAppClosed, setIsAppClosed] = useState(false);
 
   const navItems = [
-    { path: '/', name: 'README.md', icon: <FileText size={18} />, label: 'Home' },
-    { path: '/projects', name: 'projects.json', icon: <FileJson size={18} />, label: 'Projects' },
-    { path: '/about', name: 'profile.log', icon: <User size={18} />, label: 'About' },
-    { path: '/contact', name: 'contact.sh', icon: <Terminal size={18} />, label: 'Contact' },
+    { path: '/', name: 'README.md', mobileName: 'README', icon: <FileText size={18} />, label: 'Home' },
+    { path: '/projects', name: 'projects.json', mobileName: 'Projects', icon: <FileJson size={18} />, label: 'Projects' },
+    { path: '/about', name: 'profile.log', mobileName: 'About', icon: <User size={18} />, label: 'About' },
+    { path: '/contact', name: 'contact.sh', mobileName: 'Contact', icon: <Terminal size={18} />, label: 'Contact' },
   ];
 
   // Hidden navigation items for admin/login
@@ -67,10 +69,8 @@ const Layout = ({ children }) => {
     };
     window.addEventListener('keydown', handleKeyDown);
 
-    // Programmatically open chat on first load
-    const timer = setTimeout(() => {
-      setIsChatPanelOpen(true);
-    }, 1200);
+    // Programmatically open chat on first load (desktop and mobile)
+    const timer = setTimeout(() => setIsChatPanelOpen(true), 1200);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
@@ -79,7 +79,7 @@ const Layout = ({ children }) => {
   }, []);
 
   return (
-    <div className="h-screen overflow-hidden flex flex-col bg-bg text-text font-mono selection:bg-accent selection:text-bg transition-colors duration-300 relative">
+    <div className="h-[100dvh] md:h-screen overflow-hidden flex flex-col bg-bg text-text font-mono selection:bg-accent selection:text-bg transition-colors duration-300 relative">
       <CommandPalette
         isOpen={isCmdOpen}
         onClose={() => setIsCmdOpen(false)}
@@ -107,9 +107,9 @@ const Layout = ({ children }) => {
             transition={{ duration: 0.2 }}
             className="flex-1 flex flex-col min-h-0 overflow-hidden"
           >
-      {/* Full-width Title Bar (topmost header) - Mac traffic lights always visible */}
+      {/* Full-width Title Bar (topmost header) - Mac traffic lights hidden on mobile */}
       <div className="w-full h-8 bg-card border-b border-border flex items-center shrink-0 select-none pl-4 pr-4">
-        <div className="flex gap-1.5 shrink-0 mr-4 opacity-100" aria-hidden="true">
+        <div className="hidden md:flex gap-1.5 shrink-0 mr-4 opacity-100" aria-hidden="true">
           <button
             type="button"
             onClick={() => setIsAppClosed(true)}
@@ -123,7 +123,7 @@ const Layout = ({ children }) => {
         <div className="flex-1 text-center text-[11px] text-muted font-medium tracking-wide truncate">
           portfolio_aviroop
         </div>
-        <div className="w-[76px] shrink-0" />
+        <div className="hidden md:block w-[76px] shrink-0" />
       </div>
 
       {/* Row: Activity Bar + Main Container */}
@@ -159,25 +159,25 @@ const Layout = ({ children }) => {
 
         {/* Main Container Area (no title bar; starts with tabs) */}
         <div className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
-        {/* Top Bar (editor tabs/header) */}
+        {/* Top Bar (editor tabs/header) - mobile: tabs fit all 4; desktop: tabs natural width, space for search/chat */}
         <div className="flex bg-bg border-b border-border justify-between items-center pr-2 shrink-0 h-11">
-            <div className="flex items-center flex-1 min-w-0 h-full">
-              <div className="flex overflow-x-auto no-scrollbar min-w-0 h-full">
+            <div className={`flex min-w-0 h-full ${isMobile ? 'flex-1' : 'flex-1 overflow-x-auto no-scrollbar'}`}>
               {navItems.map((item) => (
-                  <Link 
+                <Link
                   key={item.path}
                   to={item.path}
+                  title={item.name}
                   className={`
-                      flex items-center gap-2 px-4 h-full border-r border-border min-w-max text-sm transition-colors group
-                      ${pathname === item.path ? 'bg-card text-text border-t-2 border-t-accent' : 'bg-bg text-muted hover:bg-card/50'}
+                    flex items-center gap-1 sm:gap-2 px-1.5 sm:px-2 md:px-4 h-full border-r border-border text-[10px] sm:text-xs md:text-sm transition-colors group
+                    ${isMobile ? 'flex-1 min-w-0 justify-center truncate' : 'flex-shrink-0 min-w-max'}
+                    ${pathname === item.path ? 'bg-card text-text border-t-2 border-t-accent' : 'bg-bg text-muted hover:bg-card/50'}
                   `}
-                  >
-                  <span className={`${pathname === item.path ? 'text-accent' : ''}`}>{item.icon}</span>
-                  <span>{item.name}</span>
-                  <X size={12} className={`ml-1 opacity-0 group-hover:opacity-100 hover:bg-muted/20 rounded p-0.5 transition-all ${pathname === item.path ? 'opacity-40' : ''}`} />
-                  </Link>
+                >
+                  <span className={`shrink-0 ${pathname === item.path ? 'text-accent' : ''}`}>{item.icon}</span>
+                  <span className={isMobile ? 'truncate' : ''}>{isMobile ? (item.mobileName ?? item.name) : item.name}</span>
+                  <X size={12} className={`hidden md:block ml-1 shrink-0 opacity-0 group-hover:opacity-100 hover:bg-muted/20 rounded p-0.5 transition-all ${pathname === item.path ? 'opacity-40' : ''}`} />
+                </Link>
               ))}
-              </div>
             </div>
 
             <button
@@ -191,7 +191,9 @@ const Layout = ({ children }) => {
               <kbd className="ml-auto text-[10px] bg-card border border-border rounded px-2 py-1 shrink-0">⌘ + K</kbd>
             </button>
 
-            <div className="flex items-center gap-2 shrink-0 ml-2">
+            {/* AI chat: top bar on desktop, FAB on mobile */}
+            {!isMobile && (
+              <div className="flex items-center gap-2 shrink-0 ml-2">
                 <button
                   onClick={() => setIsChatPanelOpen(prev => !prev)}
                   className={`p-2 rounded transition-colors border border-transparent relative ${isChatPanelOpen ? 'bg-accent/15 text-accent border-accent/30' : 'text-muted hover:text-text hover:bg-card/50'}`}
@@ -199,13 +201,16 @@ const Layout = ({ children }) => {
                 >
                   <Sparkles size={18} />
                 </button>
-            </div>
+              </div>
+            )}
         </div>
 
         {/* Content row: main content + AI panel (inside editor, same header/footer) */}
         <div className="flex-1 flex min-h-0">
           {/* Main content */}
-          <div className="flex-1 min-w-0 overflow-y-auto p-4 md:p-8 bg-bg editor-scroll" tabIndex={0}>
+          <div className="flex-1 min-w-0 overflow-y-auto p-3 md:p-8 bg-bg editor-scroll"
+          style={isMobile ? { paddingBottom: 'max(2rem, calc(7rem + env(safe-area-inset-bottom, 0px)))' } : undefined}
+          tabIndex={0}>
             <div className="max-w-5xl mx-auto">
               {children}
             </div>
@@ -223,8 +228,22 @@ const Layout = ({ children }) => {
           </AnimatePresence>
         </div>
 
+        {/* Mobile FAB for AI Chat */}
+        {isMobile && (
+          <button
+            type="button"
+            onClick={() => setIsChatPanelOpen(prev => !prev)}
+            className="fixed z-50 w-12 h-12 rounded-full bg-accent text-bg shadow-lg shadow-accent/30 flex items-center justify-center hover:brightness-110 active:scale-95 transition-all md:hidden"
+            style={{ bottom: 'calc(4rem + env(safe-area-inset-bottom, 0px))', right: 'calc(1rem + env(safe-area-inset-right, 0px))' }}
+            title="Open AI Chat"
+            aria-label="Open AI Chat"
+          >
+            <Sparkles size={22} />
+          </button>
+        )}
+
         {/* Status Bar (editor footer) */}
-        <div className="bg-accent text-bg px-4 py-1 text-xs flex justify-between items-center font-bold shrink-0">
+        <div className="bg-accent text-bg px-4 py-1 text-[10px] md:text-xs flex justify-between items-center font-bold shrink-0">
             <div className="flex gap-4">
                 <span className="flex items-center gap-1"><Code size={12}/> master*</span>
             </div>

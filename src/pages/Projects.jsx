@@ -15,7 +15,7 @@ const Projects = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
+      <h2 className="text-xl md:text-2xl font-bold mb-6 flex items-center gap-2">
           <Folder className="text-yellow" /> 
           <span className="text-text">~/projects</span>
       </h2>
@@ -46,7 +46,7 @@ const Projects = () => {
                )}
             </div>
 
-            <h3 className="text-xl font-bold text-accent mb-2">{project?.title ?? ''}</h3>
+            <h3 className="text-base md:text-xl font-bold text-accent mb-2">{project?.title ?? ''}</h3>
             <p className="text-muted mb-4 text-sm leading-relaxed">{project?.description ?? ''}</p>
             
             <div className="flex flex-wrap gap-2 mt-auto">

@@ -77,14 +77,14 @@ const Home = () => {
 
         <div className="text-center md:text-left space-y-4">
             <div>
-                <h1 className="text-4xl md:text-4xl font-bold mb-2 tracking-tight">
+                <h1 className="text-2xl md:text-4xl font-bold mb-2 tracking-tight">
                 {profile.name ?? ''}
                 </h1>
-                <h2 className="text-xl md:text-xl text-accent font-mono flex items-center justify-center md:justify-start gap-2">
+                <h2 className="text-base md:text-xl text-accent font-mono flex items-center justify-center md:justify-start gap-2">
                 {profile.role ?? ''}
                 </h2>
             </div>
-            <p className="text-md leading-relaxed text-muted max-w-xl">
+            <p className="text-sm md:text-base leading-relaxed text-muted max-w-xl">
                  {profile.bio ?? ''}
             </p>
             
@@ -184,7 +184,7 @@ const Home = () => {
                         <div className="mb-4 p-3 bg-bg rounded-md w-fit group-hover:bg-accent/10 transition-colors">
                             {section.icon}
                         </div>
-                        <h3 className="text-lg font-bold mb-1 group-hover:text-accent transition-colors flex items-center gap-2">
+                        <h3 className="text-base md:text-lg font-bold mb-1 group-hover:text-accent transition-colors flex items-center gap-2">
                             {section.label} <ArrowRight size={16} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                         </h3>
                         <p className="text-xs text-muted leading-relaxed">{section.desc}</p>

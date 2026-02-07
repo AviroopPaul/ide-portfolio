@@ -39,6 +39,26 @@ html, body {
   height: 100%;
   overflow: hidden;
 }
+
+/* Fix mobile Safari 100vh cutoff - use fill-available so viewport matches visible area */
+@supports (height: 100dvh) {
+  html, body {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+}
+@supports not (height: 100dvh) {
+  @media (max-width: 767px) {
+    html {
+      height: -webkit-fill-available;
+    }
+    body {
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+    }
+  }
+}
+
 body {
   @apply bg-bg text-text font-mono transition-colors duration-300;
 }
@@ -117,6 +137,33 @@ body {
 @keyframes resume-perimeter-travel {
   to {
     stroke-dashoffset: -257;
+  }
+}
+
+/* Safe area for devices with home indicator (e.g. iPhone X+) */
+@media (max-width: 767px) {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+}
+
+/* Hide scrollbar for tab bar (desktop) */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar and fix scroll behavior on mobile */
+@media (max-width: 767px) {
+  .editor-scroll {
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+  .editor-scroll::-webkit-scrollbar {
+    display: none;
   }
 }
 
